@@ -18,10 +18,10 @@ class Critic(nn.Module):
         self.linear3 = nn.Linear(hidden_size, output_size).cuda()
 
     def forward(self, x):
-        # print(x.shape)
+
         x = F.sigmoid(self.linear1(x))
         x = F.sigmoid(self.linear2(x))
-        # print(x.shape)
+
         x = self.linear3(x)
         return x
 
@@ -74,27 +74,25 @@ class DQN(object):
         self.buffer.append(transition)
 
     def learn(self):
-        # print("hey")
+
         if len(self.buffer) < self.batch_size:
             return
-        # print("hello")
+
         samples = random.sample(self.buffer, self.batch_size)
         obs, action, reward, obs_, done = zip(*samples)
 
-        # print(obs)
+
         obs = torch.tensor(obs, dtype=torch.float).squeeze().cuda()
         action = torch.tensor(action, dtype=torch.long).view(self.batch_size, -1).cuda()
         reward = torch.tensor(reward, dtype=torch.float).view(self.batch_size, -1).squeeze().cuda()
         obs_ = torch.tensor(obs_, dtype=torch.float).squeeze().cuda()
-        # print(obs_.shape)
+
         done = torch.tensor(done, dtype=torch.float).view(self.batch_size, -1).squeeze().cuda()
 
         q_eval = self.critic_eval(obs).gather(1, action)
-        next = self.critic_target(obs_).detach().argmax(1).view(self.batch_size, -1)
-        q_next = self.critic_target(obs_).gather(1, next)
-        q_target = (reward + self.gamma * q_next[0] * (1 - done)).view(self.batch_size, 1)
+        q_next = self.critic_target(obs_).detach()
+        q_target = (reward + self.gamma * q_next.max(1)[0] * (1 - done)).view(self.batch_size, 1)
 
-        #print(q_target)
         loss_fn = nn.MSELoss()
         loss = loss_fn(q_eval, q_target)
 

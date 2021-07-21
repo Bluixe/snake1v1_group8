@@ -8,7 +8,7 @@ from dqn11 import DQN
 from env.chooseenv import make
 import matplotlib.pyplot as plt
 from tensorboardX import SummaryWriter
-from agent.submission_zhy import compre_greedy_defense_zhy
+from agent.greedy_loop.submission import compre_greedy_defense
 
 import numpy as np
 import random
@@ -73,7 +73,7 @@ def main(args):
         while True:
             greedy_info = {'state': np.squeeze(np.array(state), axis=2), 'beans': info['beans_position'],
                            'snakes': info['snakes_position'], 'width': width, 'height': height}
-            action2 = compre_greedy_defense_zhy(greedy_info['state'],
+            action2 = compre_greedy_defense(greedy_info['state'],
                                     greedy_info['beans'],
                                     greedy_info['snakes'],
                                     greedy_info['width'],

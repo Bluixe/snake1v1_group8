@@ -9,7 +9,7 @@ from pathlib import Path
 import sys
 base_dir = Path(__file__).resolve().parent.parent
 sys.path.append(str(base_dir))
-from agent.greedy.greedy_agent import greedy_snake
+from agent.greedy.submission import greedy_snake
 from types import SimpleNamespace as SN
 import yaml
 import os

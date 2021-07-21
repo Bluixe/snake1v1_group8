@@ -154,7 +154,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--my_ai", default="comprehensive", help="dqn/random/greedy/greedy_optimized/comprehensive")
-    parser.add_argument("--opponent", default="greedy", help="dqn/random/greedy/greedy_optimized/comprehensive")
+    parser.add_argument("--opponent", default="greedy_loop", help="dqn/random/greedy/greedy_optimized/comprehensive")
     args = parser.parse_args()
 
     policy_list = [args.my_ai, args.opponent]
