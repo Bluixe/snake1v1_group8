@@ -99,9 +99,11 @@ def get_reward(pre_info, info, snake_index, reward, final_result):
             step_reward[i] -= (2500+len(info['snakes_position'][1])*500)*t
         elif final_result == 3:     # done and draw
             step_reward[i] -= 2000*t
-        else:                       # not done
-            if reward[i]:                                 # eat a bean
+                else:                       # not done
+            if reward[i] > 0:                                 # eat a bean
                 step_reward[i] += 1000*t                      # just move
+            elif len(pre_info['snakes_position'][snake_index[0]]) > len(info['snakes_position'][snake_index[0]]):
+                step_reward[i] -= max(3000*t, (len(pre_info['snakes_position'][snake_index[0]]) - len(info['snakes_position'][snake_index[0]]))*1000*t)
             else:
                 snakes_position = np.array(info['snakes_position'], dtype=object)
                 pre_snakes = np.array(pre_info['snakes_position'], dtype=object)
@@ -114,13 +116,6 @@ def get_reward(pre_info, info, snake_index, reward, final_result):
                 dists = [np.sqrt(np.sum(np.square(other_head - self_head))) for other_head in beans_position]
                 pre_dists = [np.sqrt(np.sum(np.square(other_head - pre_head))) for other_head in pre_beans]
                 step_reward[i] += (min(pre_dists)-min(dists))*500*t
-            if len(pre_info['snakes_position'][snake_index[0]]) > len(info['snakes_position'][snake_index[0]]):
-                step_reward[i] -= max(3000*t, (len(pre_info['snakes_position'][snake_index[0]]) - len(info['snakes_position'][snake_index[0]]))*1000*t)
-            # if reward[i] < 0:
-            #     step_reward[i] -= 20*t
-            # other_index = 0 if snake_index[0] == 1 else 1
-            # step_reward[i] += (len(info['snakes_position'][snake_index[0]])-len(info['snakes_position'][other_index]))*100*t
-    # print(f"steprew{step_reward}")
     return step_reward
 
 
